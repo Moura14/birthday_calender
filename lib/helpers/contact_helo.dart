@@ -17,7 +17,7 @@ class ContactHelper {
   Database? _db;
 
   Future<Database> get db async {
-    if (db != null) {
+    if (_db != null) {
       return _db!;
     } else {
       _db = await initDb();
@@ -27,13 +27,59 @@ class ContactHelper {
 
   Future<Database> initDb() async {
     final databsesPath = await getDatabasesPath();
-    final path = join(databsesPath, 'birthday.db');
+    final path = join(databsesPath, 'birthdaynews.db');
 
     return await openDatabase(path, version: 1,
-        onCreate: (Database db, int newVersion) async {
+        onCreate: (Database db, int version) async {
       await db.execute(
           "CREATE TABLE $contactTable{$idColumn INTEGER PRIMARY KEY, $nameColumn TEXT, $birthdayColumn TEXT, $imageColumn TEXT}");
     });
+  }
+
+  Future<Data> saveContact(Data data) async {
+    Database dbData = await db;
+    data.id = await dbData.insert(contactTable, data.toMap());
+    return data;
+  }
+
+  Future<Data?> getBirtdhay(int id) async {
+    Database dbData = await db;
+    List<Map> maps = await dbData.query(contactTable,
+        columns: [idColumn, nameColumn, birthdayColumn, imageColumn],
+        where: '$idColumn = ?',
+        whereArgs: [id]);
+    if (maps.isNotEmpty) {
+      return Data.fromMap(maps.first);
+    } else {
+      return null;
+    }
+  }
+
+  Future<int> delete(int id) async {
+    Database dbData = await db;
+    return await dbData
+        .delete(contactTable, where: '$idColumn = ?', whereArgs: [id]);
+  }
+
+  Future<int> update(Data data) async {
+    Database dbData = await db;
+    return await dbData.update(contactTable, data.toMap(),
+        where: '$idColumn = ?', whereArgs: [data.id]);
+  }
+
+  Future<List> getAllContacts() async {
+    Database dbData = await db;
+    List listMap = await dbData.rawQuery('SELECT * FROM $contactTable');
+    List<Data> listContact = [];
+    for (Map m in listMap) {
+      listContact.add(Data.fromMap(m));
+    }
+    return listContact;
+  }
+
+  Future<void> close() async {
+    Database dbData = await db;
+    dbData.close();
   }
 }
 
@@ -43,6 +89,8 @@ class Data {
   String birthday = '';
   String phone = '';
   String image = '';
+
+  Data();
 
   Data.fromMap(Map map) {
     id = map[idColumn];

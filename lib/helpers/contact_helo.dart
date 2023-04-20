@@ -84,11 +84,11 @@ class ContactHelper {
 }
 
 class Birthday {
-  int id = 0;
-  String name = '';
-  String birthday = '';
-  String phone = '';
-  String image = '';
+  int? id = 0;
+  String? name = '';
+  String? birthday = '';
+  String? phone = '';
+  String? image = '';
 
   Birthday();
 

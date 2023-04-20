@@ -16,7 +16,6 @@ class _HomePageState extends State<HomePage> {
   List<Birthday> data = [];
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     helper.getAllContacts().then((list) {
       setState(() {
@@ -62,9 +61,10 @@ class _HomePageState extends State<HomePage> {
                     shape: BoxShape.circle,
                     image: DecorationImage(
                         image: data[index].image != null
-                            ? FileImage(File(data[index].image))
+                            ? FileImage(File(data[index].image.toString()))
                             : const AssetImage('images/person.png')
-                                as ImageProvider)),
+                                as ImageProvider,
+                        fit: BoxFit.cover)),
               ),
               Padding(
                 padding: const EdgeInsets.only(left: 10.0),

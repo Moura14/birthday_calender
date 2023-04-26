@@ -1,10 +1,11 @@
 import 'dart:io';
 
 import 'package:birthday_calender/helpers/contact_helo.dart';
+import 'package:birthday_calender/ui/birthday_page.dart';
 import 'package:flutter/material.dart';
 
 class HomePage extends StatefulWidget {
-  const HomePage({super.key});
+  const HomePage({Key key}) : super(key: key);
 
   @override
   State<HomePage> createState() => _HomePageState();
@@ -17,11 +18,6 @@ class _HomePageState extends State<HomePage> {
   @override
   void initState() {
     super.initState();
-    helper.getAllContacts().then((list) {
-      setState(() {
-        data = list as List<Birthday>;
-      });
-    });
   }
 
   @override
@@ -34,7 +30,9 @@ class _HomePageState extends State<HomePage> {
       ),
       floatingActionButton: FloatingActionButton(
         backgroundColor: Colors.green,
-        onPressed: () {},
+        onPressed: () {
+          _showBirthdayPage();
+        },
         child: const Icon(Icons.add),
       ),
       body: ListView.builder(
@@ -61,9 +59,8 @@ class _HomePageState extends State<HomePage> {
                     shape: BoxShape.circle,
                     image: DecorationImage(
                         image: data[index].image != null
-                            ? FileImage(File(data[index].image.toString()))
-                            : const AssetImage('images/person.png')
-                                as ImageProvider,
+                            ? FileImage(File(data[index].image))
+                            : const AssetImage('images/person.png'),
                         fit: BoxFit.cover)),
               ),
               Padding(
@@ -90,6 +87,34 @@ class _HomePageState extends State<HomePage> {
           ),
         ),
       ),
+      onTap: () {
+        _showBirthdayPage(birthday: data[index]);
+      },
     );
+  }
+
+  void _showBirthdayPage({Birthday birthday}) async {
+    final recBirthday = await Navigator.push(
+        context,
+        MaterialPageRoute(
+            builder: (context) => BirthdayPage(
+                  birthday: birthday,
+                )));
+    if (recBirthday != null) {
+      if (birthday != null) {
+        await helper.update(recBirthday);
+      } else {
+        await helper.saveContact(recBirthday);
+      }
+      _getAllContacts();
+    }
+  }
+
+  void _getAllContacts() {
+    helper.getAllContacts().then((list) {
+      setState(() {
+        data = list;
+      });
+    });
   }
 }

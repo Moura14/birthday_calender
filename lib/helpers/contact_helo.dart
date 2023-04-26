@@ -14,14 +14,14 @@ class ContactHelper {
 
   ContactHelper.internal();
 
-  Database? _db;
+  Database _db;
 
   Future<Database> get db async {
     if (_db != null) {
-      return _db!;
+      return _db;
     } else {
       _db = await initDb();
-      return _db!;
+      return _db;
     }
   }
 
@@ -42,7 +42,7 @@ class ContactHelper {
     return data;
   }
 
-  Future<Birthday?> getBirtdhay(int id) async {
+  Future<Birthday> getBirtdhay(int id) async {
     Database dbData = await db;
     List<Map> maps = await dbData.query(contactTable,
         columns: [idColumn, nameColumn, birthdayColumn, imageColumn],
@@ -84,11 +84,11 @@ class ContactHelper {
 }
 
 class Birthday {
-  int? id = 0;
-  String? name = '';
-  String? birthday = '';
-  String? phone = '';
-  String? image = '';
+  int id;
+  String name;
+  String birthday;
+  String phone;
+  String image;
 
   Birthday();
 

@@ -114,6 +114,7 @@ class _HomePageState extends State<HomePage> {
     helper.getAllContacts().then((list) {
       setState(() {
         data = list;
+        print(data);
       });
     });
   }

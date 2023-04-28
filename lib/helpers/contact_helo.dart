@@ -106,6 +106,6 @@ class Birthday {
   @override
   String toString() {
     // TODO: implement toString
-    return "Birtdhay: {id: $id, name: $name, phone: $phone, img: $image}";
+    return "Birtdhay: {id: $id, birthday: $birthday name: $name, phone: $phone, img: $image}";
   }
 }

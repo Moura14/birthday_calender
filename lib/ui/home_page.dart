@@ -18,6 +18,8 @@ class _HomePageState extends State<HomePage> {
   @override
   void initState() {
     super.initState();
+
+    _getAllContacts();
   }
 
   @override
@@ -88,9 +90,59 @@ class _HomePageState extends State<HomePage> {
         ),
       ),
       onTap: () {
-        _showBirthdayPage(birthday: data[index]);
+        showOptions(context, index);
       },
     );
+  }
+
+  void showOptions(BuildContext context, int index) {
+    showModalBottomSheet(
+        context: context,
+        builder: (context) {
+          return BottomSheet(
+            onClosing: () {},
+            builder: (context) {
+              return Container(
+                padding: const EdgeInsets.all(10.0),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.all(10),
+                      child: TextButton(
+                        onPressed: () {},
+                        child: const Text(
+                          'Ligar',
+                          style: TextStyle(color: Colors.black, fontSize: 20.0),
+                        ),
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.all(10),
+                      child: TextButton(
+                        onPressed: () {},
+                        child: const Text(
+                          'Editar',
+                          style: TextStyle(color: Colors.black, fontSize: 20.0),
+                        ),
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.all(10),
+                      child: TextButton(
+                        onPressed: () {},
+                        child: const Text(
+                          'Excluir',
+                          style: TextStyle(color: Colors.black, fontSize: 20.0),
+                        ),
+                      ),
+                    )
+                  ],
+                ),
+              );
+            },
+          );
+        });
   }
 
   void _showBirthdayPage({Birthday birthday}) async {
@@ -114,7 +166,6 @@ class _HomePageState extends State<HomePage> {
     helper.getAllContacts().then((list) {
       setState(() {
         data = list;
-        print(data);
       });
     });
   }

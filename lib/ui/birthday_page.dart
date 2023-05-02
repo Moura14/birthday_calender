@@ -23,8 +23,6 @@ class _BirthdayPageState extends State<BirthdayPage> {
 
   bool _userEdited = false;
 
-  DateTime _dateTime;
-
   @override
   void initState() {
     super.initState();

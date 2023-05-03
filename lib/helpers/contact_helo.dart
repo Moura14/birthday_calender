@@ -32,7 +32,7 @@ class ContactHelper {
     return await openDatabase(path, version: 1,
         onCreate: (Database db, int version) async {
       await db.execute(
-          "CREATE TABLE $contactTable($idColumn INTEGER  PRIMARY KEY, $nameColumn TEXT, $birthdayColumn TEXT, $imageColumn TEXT)");
+          "CREATE TABLE $contactTable($idColumn INTEGER  PRIMARY KEY AUTOINCREMENT, $nameColumn TEXT, $birthdayColumn TEXT, $imageColumn TEXT)");
     });
   }
 
@@ -61,7 +61,7 @@ class ContactHelper {
         .delete(contactTable, where: '$idColumn = ?', whereArgs: [id]);
   }
 
-  Future<int> update(Birthday data) async {
+  Future<int> updateBirthday(Birthday data) async {
     Database dbData = await db;
     return await dbData.update(contactTable, data.toMap(),
         where: '$idColumn = ?', whereArgs: [data.id]);

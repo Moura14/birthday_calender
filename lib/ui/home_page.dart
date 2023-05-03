@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:birthday_calender/helpers/contact_helo.dart';
 import 'package:birthday_calender/ui/birthday_page.dart';
 import 'package:flutter/material.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({Key key}) : super(key: key);
@@ -27,7 +28,7 @@ class _HomePageState extends State<HomePage> {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.green,
-        title: const Text('Birthdays'),
+        title: const Text('Aniversários'),
         centerTitle: true,
       ),
       floatingActionButton: FloatingActionButton(
@@ -68,6 +69,7 @@ class _HomePageState extends State<HomePage> {
               Padding(
                 padding: const EdgeInsets.only(left: 10.0),
                 child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
                       data[index].name ?? "",
@@ -110,7 +112,10 @@ class _HomePageState extends State<HomePage> {
                     Padding(
                       padding: const EdgeInsets.all(10),
                       child: TextButton(
-                        onPressed: () {},
+                        onPressed: () {
+                          launch("tel:${data[index].phone} ");
+                          Navigator.pop(context);
+                        },
                         child: const Text(
                           'Ligar',
                           style: TextStyle(color: Colors.black, fontSize: 20.0),
@@ -120,7 +125,10 @@ class _HomePageState extends State<HomePage> {
                     Padding(
                       padding: const EdgeInsets.all(10),
                       child: TextButton(
-                        onPressed: () {},
+                        onPressed: () {
+                          Navigator.pop(context);
+                          _showBirthdayPage(birthday: data[index]);
+                        },
                         child: const Text(
                           'Editar',
                           style: TextStyle(color: Colors.black, fontSize: 20.0),
@@ -130,7 +138,13 @@ class _HomePageState extends State<HomePage> {
                     Padding(
                       padding: const EdgeInsets.all(10),
                       child: TextButton(
-                        onPressed: () {},
+                        onPressed: () {
+                          helper.delete(data[index].id);
+                          setState(() {
+                            data.removeAt(index);
+                            Navigator.pop(context);
+                          });
+                        },
                         child: const Text(
                           'Excluir',
                           style: TextStyle(color: Colors.black, fontSize: 20.0),
@@ -154,7 +168,7 @@ class _HomePageState extends State<HomePage> {
                 )));
     if (recBirthday != null) {
       if (birthday != null) {
-        await helper.update(recBirthday);
+        await helper.updateBirthday(recBirthday);
       } else {
         await helper.saveContact(recBirthday);
       }

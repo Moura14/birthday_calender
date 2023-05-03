@@ -3,6 +3,7 @@ import 'package:brasil_fields/brasil_fields.dart';
 import 'package:birthday_calender/helpers/contact_helo.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:image_picker/image_picker.dart';
 
 class BirthdayPage extends StatefulWidget {
   final Birthday birthday;
@@ -47,12 +48,33 @@ class _BirthdayPageState extends State<BirthdayPage> {
           title: Text(_editBirtday.name ?? "Saved Birthday"),
           centerTitle: true,
         ),
+        floatingActionButton: FloatingActionButton(
+          onPressed: () {
+            if (_editBirtday.name != null && _editBirtday.name.isNotEmpty) {
+              Navigator.pop(context, _editBirtday);
+            } else {
+              FocusScope.of(context).requestFocus(_nameFocus);
+            }
+          },
+          backgroundColor: Colors.green,
+          child: const Icon(Icons.save),
+        ),
         body: SingleChildScrollView(
           child: Padding(
             padding: const EdgeInsets.all(10),
             child: Column(
               children: [
                 GestureDetector(
+                  onTap: () {
+                    ImagePicker()
+                        .pickImage(source: ImageSource.gallery)
+                        .then((file) {
+                      if (file == null) return;
+                      setState(() {
+                        _editBirtday.image = file.path;
+                      });
+                    });
+                  },
                   child: Container(
                     width: 100,
                     height: 100,
@@ -68,7 +90,7 @@ class _BirthdayPageState extends State<BirthdayPage> {
                 TextField(
                   focusNode: _nameFocus,
                   controller: _nameController,
-                  decoration: const InputDecoration(labelText: "Name"),
+                  decoration: const InputDecoration(labelText: "Nome"),
                   onChanged: (text) {
                     _userEdited = true;
                     setState(() {
@@ -83,7 +105,7 @@ class _BirthdayPageState extends State<BirthdayPage> {
                     DataInputFormatter()
                   ],
                   controller: _birthdayController,
-                  decoration: const InputDecoration(labelText: "Birthday"),
+                  decoration: const InputDecoration(labelText: "Aniversário"),
                   onChanged: (text) {
                     _userEdited = true;
                     _editBirtday.birthday = text;
@@ -95,7 +117,7 @@ class _BirthdayPageState extends State<BirthdayPage> {
                     TelefoneInputFormatter()
                   ],
                   controller: _phoneController,
-                  decoration: const InputDecoration(labelText: "Phone"),
+                  decoration: const InputDecoration(labelText: "Telefone"),
                   onChanged: (text) {
                     _userEdited = true;
                     _editBirtday.phone = text;
@@ -105,17 +127,6 @@ class _BirthdayPageState extends State<BirthdayPage> {
               ],
             ),
           ),
-        ),
-        floatingActionButton: FloatingActionButton(
-          onPressed: () {
-            if (_editBirtday.name != null && _editBirtday.name.isNotEmpty) {
-              Navigator.pop(context, _editBirtday);
-            } else {
-              FocusScope.of(context).requestFocus(_nameFocus);
-            }
-          },
-          backgroundColor: Colors.green,
-          child: const Icon(Icons.save),
         ),
       ),
     );

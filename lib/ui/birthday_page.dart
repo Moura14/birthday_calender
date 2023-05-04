@@ -83,7 +83,7 @@ class _BirthdayPageState extends State<BirthdayPage> {
                         image: DecorationImage(
                             image: _editBirtday.image != null
                                 ? FileImage(File(_editBirtday.image))
-                                : const AssetImage("images/person.png"),
+                                : const AssetImage("images/user.png"),
                             fit: BoxFit.cover)),
                   ),
                 ),
